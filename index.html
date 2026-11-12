@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For Sara ❤️</title>
+<style>
+:root{--bg1:#fff0f3;--bg2:#ffd6e0;--ink:#4a1d2c;--soft:#8a4a5e;--card:rgba(255,255,255,.75);--accent:#e63e6d;--accent2:#ff8fab;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#2a0f1a;--bg2:#4a1630;--ink:#ffe3ea;--soft:#f0a8bc;--card:rgba(255,255,255,.08);--accent:#ff6b94;--accent2:#ff8fab}}
+:root[data-theme="dark"]{--bg1:#2a0f1a;--bg2:#4a1630;--ink:#ffe3ea;--soft:#f0a8bc;--card:rgba(255,255,255,.08);--accent:#ff6b94;--accent2:#ff8fab}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--ink);font-family:Georgia,'Times New Roman',serif;overflow-x:hidden;text-align:center}
+#hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.h{position:absolute;bottom:-40px;animation:rise linear forwards;opacity:.8}
+@keyframes rise{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+main{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:40px 20px 60px}
+.screen{display:none;animation:fade .8s ease}
+.screen.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(2.4rem,9vw,3.8rem);margin:.3em 0 .1em;line-height:1.1}
+h1 span{color:var(--accent);font-style:italic}
+p.sub{color:var(--soft);font-size:1.15rem;margin:.4em 0 1.6em}
+.big{font-size:5rem;animation:beat 1.2s infinite;display:inline-block;margin-top:12vh}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.2)}30%{transform:scale(1)}45%{transform:scale(1.15)}}
+button{font:inherit;font-size:1.1rem;border:0;border-radius:999px;padding:.8em 1.8em;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));cursor:pointer;box-shadow:0 8px 24px rgba(230,62,109,.35);transition:transform .15s}
+button:hover{transform:scale(1.05)}
+button.ghost{background:transparent;color:var(--accent);box-shadow:none;border:2px solid var(--accent)}
+.card{background:var(--card);backdrop-filter:blur(8px);border-radius:24px;padding:28px 22px;margin:20px 0;box-shadow:0 10px 30px rgba(0,0,0,.08);text-align:left}
+.reason{min-height:110px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1.35rem;font-style:italic}
+.count{color:var(--soft);font-size:.95rem;text-align:center}
+.letter{line-height:1.8;font-size:1.1rem}
+.sign{text-align:right;color:var(--accent);font-style:italic;font-size:1.2rem}
+.row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div id="hearts"></div>
+<main>
+
+<section class="screen on" id="s0">
+  <div class="big">❤️</div>
+  <h1>Hey, <span>Sara</span></h1>
+  <p class="sub">Today is all about you. I made something small, just for you.</p>
+  <button onclick="go(1)">Open your surprise ✨</button>
+</section>
+
+<section class="screen" id="s1">
+  <h1>Reasons I <span>love</span> you</h1>
+  <p class="sub">Tap through them, there’s a few.</p>
+  <div class="card reason" id="reason"></div>
+  <div class="count" id="count"></div>
+  <div class="row" style="margin-top:18px">
+    <button class="ghost" onclick="step(-1)">← Back</button>
+    <button onclick="step(1)" id="next">Next →</button>
+  </div>
+</section>
+
+<section class="screen" id="s2">
+  <h1>A little <span>letter</span></h1>
+  <div class="card letter">
+    <p>Dear Sara,</p>
+    <p>You make ordinary days feel like the best ones. Your smile can fix my worst mood, and your laugh is my favourite sound in the world.</p>
+    <p>Thank you for being patient with me, for believing in me, and for being my safe place. I’m so lucky that I get to call you mine.</p>
+    <p>Today, I just want you to feel as special as you make me feel every single day.</p>
+    <p class="sign">Always yours ❤️</p>
+  </div>
+  <button onclick="go(3)">One last thing 💌</button>
+</section>
+
+<section class="screen" id="s3">
+  <div class="big" style="margin-top:6vh">🥰</div>
+  <h1>Will you keep being<br><span>my favourite person?</span></h1>
+  <div class="row" style="margin-top:24px;min-height:70px">
+    <button id="yes" onclick="yes()">Yes, always 💖</button>
+    <button class="ghost" id="no" onmouseover="dodge()" ontouchstart="dodge()" onclick="dodge()">No</button>
+  </div>
+  <p class="sub" id="final" style="font-size:1.4rem"></p>
+</section>
+
+</main>
+<script>
+var reasons=[
+"Your smile lights up every room you walk into.",
+"You care about people so deeply.",
+"You make me want to be a better person.",
+"Talking to you is my favourite part of any day.",
+"You’re beautiful inside and out.",
+"You stay strong, even on the hard days.",
+"With you, even doing nothing is perfect.",
+"You’re simply, wonderfully, you."
+];
+var i=0,cur=0;
+function go(n){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on')});
+  document.getElementById('s'+n).classList.add('on');
+  if(n===1){show()}
+  burst(14);
+}
+function show(){
+  document.getElementById('reason').textContent=reasons[i];
+  document.getElementById('count').textContent=(i+1)+' of '+reasons.length;
+  document.getElementById('next').textContent=i===reasons.length-1?'Read my letter 💌':'Next →';
+}
+function step(d){
+  if(d>0&&i===reasons.length-1){go(2);return}
+  i=Math.max(0,i+d);show();burst(4);
+}
+function heart(){
+  var e=document.createElement('div');e.className='h';
+  e.textContent=['❤️','💖','💕','💗','🌸'][Math.floor(Math.random()*5)];
+  e.style.left=Math.random()*100+'vw';
+  e.style.fontSize=(14+Math.random()*26)+'px';
+  e.style.animationDuration=(5+Math.random()*6)+'s';
+  document.getElementById('hearts').appendChild(e);
+  setTimeout(function(){e.remove()},11000);
+}
+function burst(n){for(var k=0;k<n;k++)setTimeout(heart,k*90)}
+setInterval(heart,900);
+function dodge(){
+  var b=document.getElementById('no');
+  b.style.transform='translate('+(Math.random()*120-60)+'px,'+(Math.random()*60-30)+'px)';
+}
+function yes(){
+  document.getElementById('final').textContent='I love you, Sara. Happy day, my love! 💞';
+  document.getElementById('no').style.display='none';
+  burst(60);
+}
+</script>
+</body>
+</html>
